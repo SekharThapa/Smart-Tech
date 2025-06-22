@@ -10,10 +10,10 @@ const KhaltiInitiate = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/khalti/initiate",
+        "https://smart-tech-bca5.netlify.app/api/khalti/initiate",
         {
-          return_url: "http://localhost:5173/payment-success",
-          website_url: "http://localhost:5173",
+          return_url: "https://smart-tech-bca5.netlify.app/payment-success",
+          website_url: "https://smart-tech-bca5.netlify.app",
           amount: 1000, // in paisa (10.00 NPR)
           purchase_order_id: "order_123",
           purchase_order_name: "Test Product",

@@ -33,13 +33,13 @@ app.use(express.json({ limit: "10mb" }));
 app.use(cookieParser());
 
 // Content Security Policy middleware (must be before routes and static files)
-// app.use((req, res, next) => {
-//   res.setHeader(
-//     "Content-Security-Policy",
-//     "script-src 'self' https://js.stripe.com https://khalti.com blob: 'unsafe-inline';"
-//   );
-//   next();
-// });
+app.use((req, res, next) => {
+  res.setHeader(
+    "Content-Security-Policy",
+    "script-src 'self' https://js.stripe.com https://khalti.com blob: 'unsafe-inline';"
+  );
+  next();
+});
 
 // API Routes
 app.use("/api/auth", authRoutes);
