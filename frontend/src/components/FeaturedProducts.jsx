@@ -71,16 +71,15 @@ const FeaturedProducts = ({ featuredProducts }) => {
                       />
                     </div>
                     <div className="p-4">
-                      <h3 className="text-lg font-semibold mb-2 text-white">
+                      <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">
                         {product.name}
                       </h3>
-                      <p className="text-emerald-300 font-medium mb-4">
+                      <p className="font-medium mb-4 text-gray-900 dark:text-white">
                         ${product.price.toFixed(2)}
                       </p>
                       <button
                         onClick={() => handleClickCartButton(product)}
-                        className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-2 px-4 rounded transition-colors duration-300 
-												flex items-center justify-center">
+                        className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-2 px-4 rounded transition-colors duration-300 flex items-center justify-center">
                         <ShoppingCart className="w-5 h-5 mr-2" />
                         Add to Cart
                       </button>

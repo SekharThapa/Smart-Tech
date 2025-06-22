@@ -1,50 +1,57 @@
-import { ShoppingCart, UserPlus, LogIn, LogOut, Lock } from "lucide-react";
+import {
+  ShoppingCart,
+  UserPlus,
+  LogIn,
+  LogOut,
+  Lock,
+  Sun,
+  Moon,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import { useUserStore } from "../stores/useUserStore";
 import { useCartStore } from "../stores/useCartStore";
 
-const Navbar = () => {
+const Navbar = ({ darkMode, setDarkMode }) => {
   const { user, logout } = useUserStore();
   const isAdmin = user?.role === "admin";
   const { cart } = useCartStore();
 
   return (
-    <header className="fixed top-0 left-0 w-full bg-white shadow-md border-b border-gray-200 z-50 transition-all duration-300">
+    <header className="fixed top-0 left-0 w-full bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow z-50 transition-all duration-300">
       <div className="container mx-auto px-6 py-3 flex flex-wrap justify-between items-center">
-        {/* Brand */}
+        {/* Logo */}
         <Link
           to="/"
           className="flex items-center space-x-2 select-none cursor-pointer"
           aria-label="SmartTech Home">
-          <h1
-            className="text-4xl font-extrabold"
-            style={{
-              fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-            }}>
-            <span className="text-emerald-600 drop-shadow-sm transition-colors duration-300 hover:text-emerald-500">
+          <img
+            src="/logo.png"
+            alt="SmartTech Logo"
+            className="h-10 w-10 rounded-2xl"
+          />
+          <h1 className="text-4xl font-extrabold font-sans">
+            <span className="text-emerald-600 dark:text-emerald-400">
               Smart
             </span>
-            <span className="text-blue-600 drop-shadow-sm transition-colors duration-300 hover:text-blue-500">
-              Tech
-            </span>
+            <span className="text-blue-600 dark:text-blue-400">Tech</span>
           </h1>
         </Link>
 
         {/* Navigation */}
-        <nav className="flex flex-wrap items-center gap-6">
+        <nav className="flex flex-wrap items-center gap-4">
           <Link
             to="/"
-            className="text-gray-800 hover:text-emerald-600 transition duration-300 font-semibold">
+            className="text-gray-800 dark:text-white hover:text-emerald-600 dark:hover:text-emerald-400 font-semibold transition">
             Home
           </Link>
 
           {user && (
             <Link
               to="/cart"
-              className="relative group text-gray-800 hover:text-emerald-600 transition duration-300 flex items-center"
+              className="relative group text-gray-800 dark:text-white hover:text-emerald-600 dark:hover:text-emerald-400 font-semibold transition flex items-center"
               aria-label="View Cart">
               <ShoppingCart size={20} className="mr-1" />
-              <span className="hidden sm:inline font-semibold">Cart</span>
+              <span className="hidden sm:inline">Cart</span>
               {cart.length > 0 && (
                 <span className="absolute -top-2 -left-3 bg-emerald-500 text-white rounded-full px-2 py-0.5 text-xs font-bold animate-pulse shadow-lg">
                   {cart.length}
@@ -56,12 +63,21 @@ const Navbar = () => {
           {isAdmin && (
             <Link
               to="/secret-dashboard"
-              className="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1 rounded-md font-semibold flex items-center shadow-sm transition duration-300">
+              className="bg-emerald-600 dark:bg-emerald-500 hover:bg-emerald-500 dark:hover:bg-emerald-400 text-white dark:text-gray-900 px-3 py-1 rounded-md font-semibold flex items-center shadow-sm transition duration-300">
               <Lock size={18} className="mr-1" />
               <span className="hidden sm:inline">Dashboard</span>
             </Link>
           )}
 
+          {/* Dark Mode Toggle */}
+          <button
+            onClick={() => setDarkMode(!darkMode)}
+            className="text-gray-800 dark:text-white hover:text-yellow-500 dark:hover:text-yellow-300 p-2 rounded-md transition"
+            aria-label="Toggle Theme">
+            {darkMode ? <Sun size={20} /> : <Moon size={20} />}
+          </button>
+
+          {/* Auth Buttons */}
           {user ? (
             <button
               onClick={logout}
