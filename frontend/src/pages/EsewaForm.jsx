@@ -15,7 +15,7 @@ const EsewaForm = () => {
       };
 
       const res = await axios.post(
-        "http://localhost:5000/api/payments/initiate-payment",
+        "https://smart-tech-frqx.onrender.com/api/payments/initiate-payment",
         payload
       );
 
@@ -53,12 +53,12 @@ const EsewaForm = () => {
           <input
             type="hidden"
             name="success_url"
-            value="http://localhost:5173/payment/success"
+            value="https://smart-tech-bca5.netlify.app/payment/success"
           />
           <input
             type="hidden"
             name="failure_url"
-            value="http://localhost:5173/payment/failure"
+            value="https://smart-tech-bca5.netlify.app/payment/failure"
           />
         </form>
       )}
