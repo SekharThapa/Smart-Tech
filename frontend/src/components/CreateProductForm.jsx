@@ -20,46 +20,37 @@ const CreateProductForm = () => {
     price: "",
     category: "",
     image: "",
-    stock: "",
   });
 
   const { createProduct, loading } = useProductStore();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const productToSend = {
-      ...newProduct,
-      price: parseFloat(newProduct.price),
-      stock: parseInt(newProduct.stock, 10),
-    };
-
-    console.log("Submitting product:", productToSend);
-
     try {
-      await createProduct(productToSend);
+      await createProduct(newProduct);
       setNewProduct({
         name: "",
         description: "",
         price: "",
         category: "",
         image: "",
-        stock: "",
       });
-    } catch (error) {
-      console.error("Error creating product", error);
+    } catch {
+      console.log("error creating a product");
     }
   };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if (!file) return;
+    if (file) {
+      const reader = new FileReader();
 
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setNewProduct((prev) => ({ ...prev, image: reader.result }));
-    };
-    reader.readAsDataURL(file);
+      reader.onloadend = () => {
+        setNewProduct({ ...newProduct, image: reader.result });
+      };
+
+      reader.readAsDataURL(file); // base64
+    }
   };
 
   return (
@@ -73,7 +64,6 @@ const CreateProductForm = () => {
       </h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Name */}
         <div>
           <label
             htmlFor="name"
@@ -83,17 +73,18 @@ const CreateProductForm = () => {
           <input
             type="text"
             id="name"
+            name="name"
             value={newProduct.name}
             onChange={(e) =>
               setNewProduct({ ...newProduct, name: e.target.value })
             }
-            className="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3
-              text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+            className="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2
+						 px-3 text-white focus:outline-none focus:ring-2
+						focus:ring-emerald-500 focus:border-emerald-500"
             required
           />
         </div>
 
-        {/* Description */}
         <div>
           <label
             htmlFor="description"
@@ -102,18 +93,19 @@ const CreateProductForm = () => {
           </label>
           <textarea
             id="description"
-            rows="3"
+            name="description"
             value={newProduct.description}
             onChange={(e) =>
               setNewProduct({ ...newProduct, description: e.target.value })
             }
-            className="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3
-              text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+            rows="3"
+            className="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm
+						 py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 
+						 focus:border-emerald-500"
             required
           />
         </div>
 
-        {/* Price */}
         <div>
           <label
             htmlFor="price"
@@ -122,40 +114,20 @@ const CreateProductForm = () => {
           </label>
           <input
             type="number"
-            step="0.01"
             id="price"
+            name="price"
             value={newProduct.price}
             onChange={(e) =>
               setNewProduct({ ...newProduct, price: e.target.value })
             }
-            className="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3
-              text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+            step="0.01"
+            className="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm 
+						py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500
+						 focus:border-emerald-500"
             required
           />
         </div>
 
-        {/* Stock */}
-        <div>
-          <label
-            htmlFor="stock"
-            className="block text-sm font-medium text-gray-300">
-            Stock
-          </label>
-          <input
-            type="number"
-            min="0"
-            id="stock"
-            value={newProduct.stock}
-            onChange={(e) =>
-              setNewProduct({ ...newProduct, stock: e.target.value })
-            }
-            className="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3
-              text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-            required
-          />
-        </div>
-
-        {/* Category */}
         <div>
           <label
             htmlFor="category"
@@ -164,23 +136,24 @@ const CreateProductForm = () => {
           </label>
           <select
             id="category"
+            name="category"
             value={newProduct.category}
             onChange={(e) =>
               setNewProduct({ ...newProduct, category: e.target.value })
             }
-            className="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3
-              text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+            className="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md
+						 shadow-sm py-2 px-3 text-white focus:outline-none 
+						 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
             required>
             <option value="">Select a category</option>
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat.charAt(0).toUpperCase() + cat.slice(1)}
+            {categories.map((category) => (
+              <option key={category} value={category}>
+                {category}
               </option>
             ))}
           </select>
         </div>
 
-        {/* Image Upload */}
         <div className="mt-1 flex items-center">
           <input
             type="file"
@@ -191,23 +164,20 @@ const CreateProductForm = () => {
           />
           <label
             htmlFor="image"
-            className="cursor-pointer bg-gray-700 py-2 px-3 border border-gray-600 rounded-md shadow-sm
-              text-sm leading-4 font-medium text-gray-300 hover:bg-gray-600 focus:outline-none focus:ring-2
-              focus:ring-offset-2 focus:ring-emerald-500">
+            className="cursor-pointer bg-gray-700 py-2 px-3 border border-gray-600 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-300 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
             <Upload className="h-5 w-5 inline-block mr-2" />
             Upload Image
           </label>
           {newProduct.image && (
-            <span className="ml-3 text-sm text-gray-400">Image uploaded</span>
+            <span className="ml-3 text-sm text-gray-400">Image uploaded </span>
           )}
         </div>
 
-        {/* Submit Button */}
         <button
           type="submit"
-          className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm
-            text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none
-            focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50"
+          className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md 
+					shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 
+					focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50"
           disabled={loading}>
           {loading ? (
             <>
@@ -228,5 +198,4 @@ const CreateProductForm = () => {
     </motion.div>
   );
 };
-
 export default CreateProductForm;

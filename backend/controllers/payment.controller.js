@@ -2,6 +2,7 @@ import Coupon from "../models/coupon.model.js";
 import Order from "../models/order.model.js";
 import { stripe } from "../lib/stripe.js";
 import { generateEsewaSignature } from "../utils/methods.js";
+import { sendSuccessEmail } from "../utils/sendMail.js";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -180,5 +181,32 @@ export const initiateEsewaPayment = async (req, res) => {
     res.json({ formData });
   } catch (error) {
     res.status(500).json({ message: "Error initiating eSewa payment", error });
+  }
+};
+
+export const esewaSuccessHandler = async (req, res) => {
+  try {
+    const { transaction_uuid, reference_id, total_amount } = req.query;
+
+    // Optional: verify payment on your backend with eSewa
+
+    // Send email to user (for now, we'll use static email, later you can use user's email from db/order)
+    await sendSuccessEmail({
+      to: "thapasekhar2060@gmail.com",
+      subject: "🧾 SmartTech Payment Successful",
+      html: `
+        <h2>Thank you for your order!</h2>
+        <p>Your payment of NPR <strong>${total_amount}</strong> was successful.</p>
+        <p>Transaction ID: <strong>${transaction_uuid}</strong></p>
+        <p>Reference ID: <strong>${reference_id}</strong></p>
+        <p>We'll process and ship your order soon.</p>
+      `,
+    });
+
+    // Redirect or show success message
+    res.redirect("http://localhost:5173/success"); // or your frontend success page
+  } catch (error) {
+    console.error("eSewa Success Handler Error:", error.message);
+    res.status(500).send("Error processing eSewa success.");
   }
 };
