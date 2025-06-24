@@ -7,15 +7,18 @@ const SuccessPage = () => {
     const sendSuccessEmail = async () => {
       try {
         // Example payload – customize as needed
-        await axios.get("/payments/success", {
-          to: "thapasekhar2060.com", // Ideally fetch from auth or user context
-          subject: "🧾 Your SmartTech Payment Was Successful",
-          html: `
+        await axios.get(
+          "https://smart-tech-frqx.onrender.com/api/payments/success",
+          {
+            to: "thapasekhar2060.com", // Ideally fetch from auth or user context
+            subject: "🧾 Your SmartTech Payment Was Successful",
+            html: `
             <h2>Payment Confirmation</h2>
             <p>Thank you for shopping with SmartTech. Your payment has been received successfully.</p>
             <p>We will process and dispatch your order shortly.</p>
           `,
-        });
+          }
+        );
         console.log("✅ Email triggered from frontend");
       } catch (err) {
         console.error(
