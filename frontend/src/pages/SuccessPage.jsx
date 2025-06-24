@@ -7,7 +7,7 @@ const SuccessPage = () => {
     const sendSuccessEmail = async () => {
       try {
         // Example payload – customize as needed
-        await axios.get("/api/send-success-email", {
+        await axios.get("/payments/success", {
           to: "thapasekhar2060.com", // Ideally fetch from auth or user context
           subject: "🧾 Your SmartTech Payment Was Successful",
           html: `

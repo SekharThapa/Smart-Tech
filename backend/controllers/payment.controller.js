@@ -204,7 +204,7 @@ export const esewaSuccessHandler = async (req, res) => {
     });
 
     // Redirect or show success message
-    res.redirect("http://localhost:5173/success"); // or your frontend success page
+    res.redirect("https://smart-tech-frqx.onrender.com/api/payments/success"); // or your frontend success page
   } catch (error) {
     console.error("eSewa Success Handler Error:", error.message);
     res.status(500).send("Error processing eSewa success.");
