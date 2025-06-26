@@ -186,25 +186,39 @@ export const initiateEsewaPayment = async (req, res) => {
 
 export const esewaSuccessHandler = async (req, res) => {
   try {
-    const { transaction_uuid, reference_id, total_amount } = req.query;
+    const {
+      transaction_uuid,
+      reference_id,
+      total_amount,
+      email,
+      subject,
+      html,
+    } = req.query;
 
-    // Optional: verify payment on your backend with eSewa
+    // If you want to send email only from frontend call, handle email/subject/html:
+    if (email && subject && html) {
+      await sendSuccessEmail({
+        to: email,
+        subject: decodeURIComponent(subject),
+        html: decodeURIComponent(html),
+      });
+    } else {
+      // Fallback: send static email with payment details
+      await sendSuccessEmail({
+        to: "thapasekhar2060@gmail.com",
+        subject: "🧾 SmartTech Payment Successful",
+        html: `
+          <h2>Thank you for your order!</h2>
+          <p>Your payment of NPR <strong>${total_amount}</strong> was successful.</p>
+          <p>Transaction ID: <strong>${transaction_uuid}</strong></p>
+          <p>Reference ID: <strong>${reference_id}</strong></p>
+          <p>We'll process and ship your order soon.</p>
+        `,
+      });
+    }
 
-    // Send email to user (for now, we'll use static email, later you can use user's email from db/order)
-    await sendSuccessEmail({
-      to: "thapasekhar2060@gmail.com",
-      subject: "🧾 SmartTech Payment Successful",
-      html: `
-        <h2>Thank you for your order!</h2>
-        <p>Your payment of NPR <strong>${total_amount}</strong> was successful.</p>
-        <p>Transaction ID: <strong>${transaction_uuid}</strong></p>
-        <p>Reference ID: <strong>${reference_id}</strong></p>
-        <p>We'll process and ship your order soon.</p>
-      `,
-    });
-
-    // Redirect or show success message
-    res.redirect("https://smart-tech-frqx.onrender.com/api/payments/success"); // or your frontend success page
+    // Redirect or respond success
+    res.redirect("https://smart-tech-frqx.onrender.com/payment-success"); // frontend success page URL
   } catch (error) {
     console.error("eSewa Success Handler Error:", error.message);
     res.status(500).send("Error processing eSewa success.");
