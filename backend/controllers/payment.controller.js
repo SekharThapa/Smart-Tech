@@ -186,23 +186,27 @@ export const initiateEsewaPayment = async (req, res) => {
 
 export const esewaSuccessHandler = async (req, res) => {
   try {
-    const { email, subject, html } = req.query;
+    const { transaction_uuid, reference_id, total_amount } = req.query;
 
-    if (!email || !subject || !html) {
-      return res
-        .status(400)
-        .send("Missing email, subject or html in query params");
-    }
+    // Optional: verify payment on your backend with eSewa
 
+    // Send email to user (for now, we'll use static email, later you can use user's email from db/order)
     await sendSuccessEmail({
-      to: email,
-      subject,
-      html: decodeURIComponent(html),
+      to: "thapasekhar2060@gmail.com",
+      subject: "🧾 SmartTech Payment Successful",
+      html: `
+        <h2>Thank you for your order!</h2>
+        <p>Your payment of NPR <strong>${total_amount}</strong> was successful.</p>
+        <p>Transaction ID: <strong>${transaction_uuid}</strong></p>
+        <p>Reference ID: <strong>${reference_id}</strong></p>
+        <p>We'll process and ship your order soon.</p>
+      `,
     });
 
-    return res.status(200).send("Email sent successfully");
+    // Redirect or show success message
+    res.redirect("https://smart-tech-frqx.onrender.com/api/payments/success"); // or your frontend success page
   } catch (error) {
     console.error("eSewa Success Handler Error:", error.message);
-    return res.status(500).send("Error processing eSewa success.");
+    res.status(500).send("Error processing eSewa success.");
   }
 };

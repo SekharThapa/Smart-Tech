@@ -19,6 +19,7 @@ const SuccessPage = () => {
         await axios.get(
           `/payments/success?email=${email}&subject=${subject}&html=${html}`
         );
+
         console.log("✅ Email triggered from frontend");
       } catch (err) {
         console.error(
