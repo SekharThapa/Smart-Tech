@@ -6,7 +6,6 @@ const SuccessPage = () => {
   useEffect(() => {
     const sendSuccessEmail = async () => {
       try {
-        const email = "thapasekhar2060@gmail.com";
         const subject = encodeURIComponent(
           "🧾 Your SmartTech Payment Was Successful"
         );
@@ -16,9 +15,7 @@ const SuccessPage = () => {
           <p>We will process and dispatch your order shortly.</p>
         `);
 
-        await axios.get(
-          `/payments/success?email=${email}&subject=${subject}&html=${html}`
-        );
+        await axios.get(`/payments/success?subject=${subject}&html=${html}`);
 
         console.log("✅ Email triggered from frontend");
       } catch (err) {
