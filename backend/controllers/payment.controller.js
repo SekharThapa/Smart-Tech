@@ -183,26 +183,25 @@ export const initiateEsewaPayment = async (req, res) => {
     res.status(500).json({ message: "Error initiating eSewa payment", error });
   }
 };
-
 export const esewaSuccessHandler = async (req, res) => {
   try {
-    const { subject, html } = req.query;
-
-    if (!subject || !html) {
-      return res.status(400).send("Missing subject or html in query params");
-    }
-
-    const email = process.env.SMTP_USER;
+    const { transaction_uuid, reference_id, total_amount } = req.query;
 
     await sendSuccessEmail({
-      to: email,
-      subject: decodeURIComponent(subject),
-      html: decodeURIComponent(html),
+      to: "thapasekhar2060@gmail.com", // or process.env.SMTP_USER
+      subject: "🧾 SmartTech Payment Successful",
+      html: `
+        <h2>Thank you for your order!</h2>
+        <p>Your payment of NPR <strong>${total_amount}</strong> was successful.</p>
+        <p>Transaction ID: <strong>${transaction_uuid}</strong></p>
+        <p>Reference ID: <strong>${reference_id}</strong></p>
+        <p>We'll process and ship your order soon.</p>
+      `,
     });
 
-    return res.status(200).send("Email sent successfully");
+    res.status(200).send("✅ Email sent from eSewa success handler");
   } catch (error) {
-    console.error("eSewa Success Handler Error:", error.message);
-    return res.status(500).send("Error processing eSewa success.");
+    console.error("❌ eSewa Success Handler Error:", error.message);
+    res.status(500).send("❌ Failed to process eSewa success");
   }
 };

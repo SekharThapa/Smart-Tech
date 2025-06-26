@@ -4,29 +4,16 @@ import { Link } from "react-router-dom";
 
 const SuccessPage = () => {
   useEffect(() => {
-    const sendSuccessEmail = async () => {
+    const hitSuccessRoute = async () => {
       try {
-        const subject = encodeURIComponent(
-          "🧾 Your SmartTech Payment Was Successful"
-        );
-        const html = encodeURIComponent(`
-          <h2>Payment Confirmation</h2>
-          <p>Thank you for shopping with SmartTech. Your payment has been received successfully.</p>
-          <p>We will process and dispatch your order shortly.</p>
-        `);
-
-        await axios.get(`/payments/success?subject=${subject}&html=${html}`);
-
-        console.log("✅ Email triggered from frontend");
+        await axios.get("/payments/success"); // 🔥 hits your backend route
+        console.log("✅ Backend success route hit");
       } catch (err) {
-        console.error(
-          "❌ Error sending success email from frontend",
-          err.message
-        );
+        console.error("❌ Error hitting success route:", err.message);
       }
     };
 
-    sendSuccessEmail();
+    hitSuccessRoute(); // ✅ Automatically called on page load
   }, []);
 
   return (
