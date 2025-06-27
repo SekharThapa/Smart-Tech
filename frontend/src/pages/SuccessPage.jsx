@@ -12,7 +12,7 @@ const SuccessPage = () => {
       }
     };
 
-    hitSuccessRoute(); // Automatically called when page renders
+    hitSuccessRoute(); // Call on render
   }, []);
 
   return (
