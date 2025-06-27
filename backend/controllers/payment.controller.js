@@ -185,21 +185,20 @@ export const initiateEsewaPayment = async (req, res) => {
 };
 export const esewaSuccessHandler = async (req, res) => {
   try {
-    const { transaction_uuid, reference_id, total_amount } = req.query;
-
     await sendSuccessEmail({
       to: "thapasekhar2060@gmail.com", // or process.env.SMTP_USER
       subject: "🧾 SmartTech Payment Successful",
       html: `
         <h2>Thank you for your order!</h2>
-        <p>Your payment of NPR <strong>${total_amount}</strong> was successful.</p>
-        <p>Transaction ID: <strong>${transaction_uuid}</strong></p>
-        <p>Reference ID: <strong>${reference_id}</strong></p>
+        <p>Your payment of NPR <strong></strong></strong> was successful.</p>
+        <p>Transaction ID: <strong></strong></p>
+        <p>Reference ID: <strong></strong></p>
         <p>We'll process and ship your order soon.</p>
       `,
     });
 
     res.status(200).send("✅ Email sent from eSewa success handler");
+    console.log("mail sent");
   } catch (error) {
     console.error("❌ eSewa Success Handler Error:", error.message);
     res.status(500).send("❌ Failed to process eSewa success");
